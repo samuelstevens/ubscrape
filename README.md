@@ -25,3 +25,8 @@ If PUD crashes or fails, it will restart and try to redo as little work as possi
 ## Questions
 
 1. Do we want examples as well as definitions?
+
+## To Do
+
+* Add support for dumping to JSON
+* Add threading, or some way to parallelize the work

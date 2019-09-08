@@ -1,0 +1,6 @@
+venv
+.mypy_cache
+.vscode
+*.db
+*-journal
+__pycache__

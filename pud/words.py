@@ -1,6 +1,5 @@
 # internal to python
 import re
-from typing import List
 from urllib.parse import unquote
 from string import ascii_uppercase
 from sqlite3 import IntegrityError
@@ -31,11 +30,11 @@ def write_words_for_letter(prefix: str, con):
         page_num = 1
 
     url = make_url()
-    r = requests.get(url)
+    req = requests.get(url)
 
-    while r.url != 'https://www.urbandictionary.com/':
+    while req.url != 'https://www.urbandictionary.com/':
 
-        soup = BeautifulSoup(r.text, features="html.parser")
+        soup = BeautifulSoup(req.text, features="html.parser")
         a_tags = soup.find_all('a', href=re.compile(r'/define.php'))
 
         pattern = re.compile(
@@ -52,7 +51,8 @@ def write_words_for_letter(prefix: str, con):
 
         try:
             con.executemany(
-                'INSERT INTO word(word, complete, page_num, letter) VALUES (?, ?, ?, ?)', formatted_words)
+                'INSERT INTO word(word, complete, page_num, letter) VALUES (?, ?, ?, ?)',
+                formatted_words)
             con.commit()
         except IntegrityError:
             pass
@@ -62,7 +62,7 @@ def write_words_for_letter(prefix: str, con):
 
         page_num += 1
         url = make_url()
-        r = requests.get(url)
+        req = requests.get(url)
 
 
 def write_all_words(con):

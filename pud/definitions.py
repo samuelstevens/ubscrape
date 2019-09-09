@@ -1,8 +1,13 @@
-import requests
-from bs4 import BeautifulSoup
+import multiprocessing as mp
 from typing import List
 
+from bs4 import BeautifulSoup
+import requests
+
 from constants import BASE_URL
+from db import initialize_db
+
+CON = initialize_db()
 
 
 def define_word(word) -> List[str]:
@@ -22,17 +27,23 @@ def define_word(word) -> List[str]:
     return definitions
 
 
-def define_all_words(con):
-    words = con.execute('SELECT * FROM word WHERE complete = 0').fetchall()
+def write_definition(word):
+    word = word[0]
 
-    for w in words:
-        w = w[0]
+    defs = define_word(word)
 
-        defs = define_word(w)
+    formatted_defs = [(d, word) for d in defs]
 
-        formatted_defs = [(d, w) for d in defs]
+    CON.executemany(
+        'INSERT INTO definition(definition, word_id) VALUES (?, ?)', formatted_defs)
+    CON.execute('UPDATE word SET complete = 1 WHERE word = ?', (word,))
+    CON.commit()
 
-        con.executemany(
-            'INSERT INTO definition(definition, word_id) VALUES (?, ?)', formatted_defs)
-        con.execute('UPDATE word SET complete = 1 WHERE word = ?', (w,))
-        con.commit()
+
+def define_all_words():
+    pool = mp.Pool(mp.cpu_count())
+
+    words = CON.execute(
+        'SELECT * FROM word WHERE complete = 0').fetchall()
+
+    pool.map(write_definition, words, chunksize=20)

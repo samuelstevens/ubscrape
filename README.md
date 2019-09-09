@@ -30,3 +30,23 @@ If PUD crashes or fails, it will restart and try to redo as little work as possi
 
 * Add support for dumping to JSON
 * Add threading, or some way to parallelize the work
+
+## Parallelizing Work
+
+* Using multiprocessing pool
+
+Time of 100 words: 
+real    0m13.341s
+real    0m12.922s
+real    0m12.606s
+
+Time of 0 words (testing for initialization):
+real    0m3.033s
+real    0m3.171s
+real    0m2.893s
+
+~13 and ~3 seem good enough for an estimate. 100 words takes 10 seconds, so 1.9 million words takes 0.19 million seconds.
+
+0.19 * 10 ^ 6 seconds / 60 sec/min / 60 min/hr / 24 hr/day = ~2.2 days
+
+I could run it on my laptop for 6 hours a day, or I could run it on the school computers and get it done in two days (checking twice a day on progress).

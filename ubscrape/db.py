@@ -1,15 +1,17 @@
 import sqlite3
 from .jsonwriter import JsonWriter
+from typing import List, Tuple
+DB_FILE_NAME = 'urban-dict.db'
 
 
-def get_connection(db_file_name):
-    con = sqlite3.connect(db_file_name)
+def get_connection():
+    con = sqlite3.connect(DB_FILE_NAME)
 
     return con
 
 
 def initialize_db():
-    con = get_connection('urban-dict.db')
+    con = get_connection()
 
     con.execute('''CREATE TABLE IF NOT EXISTS word (
     word text PRIMARY KEY,
@@ -31,7 +33,7 @@ def initialize_db():
 
 
 def clear_database():
-    con = get_connection('urban-dict.db')
+    con = get_connection()
 
     con.execute('DROP TABLE definition')
     con.execute('DROP TABLE word')
@@ -42,7 +44,7 @@ def clear_database():
 
 
 def dump_database(arg):
-    con = get_connection('urban-dict.db')
+    con = get_connection()
 
     writer = JsonWriter()
 
@@ -62,9 +64,9 @@ def dump_database(arg):
         if word != prev_word:
             # dump this definition and start a new set
             writer.write_word(prev_word, definition_set)
+
             prev_word = word
-            definition_set = set()
-            definition_set.add(definition)
+            definition_set = set([definition])
 
     writer.write_word(prev_word, definition_set)
     writer.dump_pool()

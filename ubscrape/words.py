@@ -62,7 +62,7 @@ def write_words_for_letter(prefix: str, con):
             pass
 
         print(
-            f'Working on page {page_num} for {letter}. Total {140 * page_num} {letter} words.')
+            f'Working on page {page_num} for {letter}. Total {140 * (page_num - 1) + len(words)} {letter} words.')
 
         page_num += 1
         url = make_url()
@@ -70,5 +70,5 @@ def write_words_for_letter(prefix: str, con):
 
 
 def write_all_words():
-    for letter in ascii_uppercase:
+    for letter in ascii_uppercase + '*':
         write_words_for_letter(letter, CON)

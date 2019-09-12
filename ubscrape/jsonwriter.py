@@ -2,10 +2,21 @@ import json
 from functools import reduce
 import os
 from typing import List, Dict, Set
+from string import ascii_lowercase
+
+
+def get_letter(word: str) -> str:
+    if not word:
+        return None
+
+    if word[0].lower() in ascii_lowercase:
+        return word[0].lower()
+    else:
+        return '*'
 
 
 class JsonWriter:
-    def __init__(self, limit=50, out='results'):
+    def __init__(self, limit=1, out='results'):
         self.pool: Dict[str, List[str]] = {}
         self.limit: int = limit
         self.first_word: str = ''
@@ -19,7 +30,7 @@ class JsonWriter:
 
     def write_word(self, word: str, definitions: Set[str]):
         if word and definitions:
-            if self.first_word and word[0].lower() != self.first_word[0].lower():
+            if self.first_word and get_letter(word) != get_letter(self.first_word):
                 self.dump_pool()
 
             if not self.pool.keys():
@@ -37,7 +48,7 @@ class JsonWriter:
     def dump_pool(self):
         file_name = f'{self.first_word}-{self.last_word}.json'
 
-        first_letter = file_name[0].lower()
+        first_letter = get_letter(file_name)
 
         folder = os.path.join(self.path, first_letter)
 
@@ -57,4 +68,4 @@ class JsonWriter:
             return total_len + len(word) + reduce(lambda total, definition: total +
                                                   len(definition), defs, 4 * len(defs))
 
-        return 2 * reduce(reduce_f, self.pool, 2)
+        return reduce(reduce_f, self.pool, 2)

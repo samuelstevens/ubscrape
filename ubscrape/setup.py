@@ -1,10 +1,11 @@
 from setuptools import setup
+from .constants import version
 
 setup(
     # This is the name of your PyPI-package.
     name='ubscrape',
     # Update the version number for new releases
-    version='0.5',
+    version=version,
     description='Scrapes Urban Dictionary and stores it locally.',
     url='http://github.com/samuelstevens/ubscrape',
     author='Samuel Stevens',

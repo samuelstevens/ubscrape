@@ -1,8 +1,27 @@
 import argparse
+import sys
 
 from .definitions import define_all_words, write_definition
 from .words import write_all_words
-from .db import clear_database, dump_database
+from .db import clear_database, dump_database, get_connection
+from .constants import version
+
+
+def report_progress():
+    con = get_connection()
+
+    count = con.execute(
+        'SELECT COUNT(word) FROM word WHERE complete = 1').fetchone()[0]
+    total = con.execute('SELECT COUNT(word) FROM word').fetchone()[0]
+
+    seconds_remaining = (total - count) / 10
+    hours_remaining = seconds_remaining / 60 / 60
+    days_remaining = hours_remaining / 24
+
+    print(f'{count} defined out of {total} total words.')
+    print(f'{(count / total * 100):.2f}% complete.')
+    print(
+        f'At roughly 10 words/second, it will take {hours_remaining:.1f} hours, or {days_remaining:.1f} days.')
 
 
 def scrape():
@@ -15,6 +34,11 @@ def main():
     parser.add_argument("-s",
                         "--scrape",
                         help="Continues scraping Urban Dictionary using the SQLite database as its starting point.",
+                        action="store_true")
+
+    parser.add_argument("-v",
+                        "--version",
+                        help="Shows version number.",
                         action="store_true")
 
     parser.add_argument('-d',
@@ -39,6 +63,11 @@ def main():
                         help="Clears the existing SQLite database.",
                         action="store_true")
 
+    parser.add_argument("-r",
+                        "--report",
+                        help="Shows the progress of defining words.",
+                        action="store_true")
+
     parser.add_argument("-f",
                         "--force",
                         help="Forces the SQLite database to be cleared.",
@@ -46,13 +75,20 @@ def main():
 
     args = parser.parse_args()
 
+    if args.version:
+        print(f'Version {version}')
+
+    if args.report:
+        report_progress()
+
     if args.scrape:
         scrape()
     elif args.dump:
         dump_database(args.dump)
     elif args.define:
         definitions = write_definition((args.define,))
-        print(definitions)
+        if definitions:
+            print(definitions)
     elif args.define_all:
         define_all_words()
     elif args.clear:
@@ -61,7 +97,7 @@ def main():
         else:
             print(
                 "Use --clear [-c] with --force [-f] to COMPLETELY DELETE the SQLite database.")
-    else:
+    elif not args.report:
         print('No arguments detected. Continuing to scrape.')
         scrape()
 

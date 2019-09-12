@@ -29,6 +29,8 @@ If ubscrape crashes or fails, it will restart and try to redo as little work as 
 ## To Do
 
 - Add support for dumping at the same time as scraping, making it less linear.
+- Add a version number to the CLI
+- Add a `--report` option to show the current progress (number of words, defined, total number of words, estimate at 10 words/second)
 
 ## Parallelizing Work
 
@@ -49,3 +51,29 @@ real 0m2.893s
 0.19 \* 10 ^ 6 seconds / 60 sec/min / 60 min/hr / 24 hr/day = ~2.2 days
 
 I could run it on my laptop for 6 hours a day, or I could run it on the school computers and get it done in two days (checking twice a day on progress).
+
+## Building
+
+1. Delete `build/`, `dist/`, `ubscrape.egg-info/`.
+
+2. Bump version number in `ubscrape/setup.py`.
+
+3. Activate your virtual environment, make sure everything is installed.
+
+4. `python ubscrape/setup.py sdist bdist_wheel`
+
+_Note to self_
+
+- Activate global environment with `. ~/global_venv/bin/activate` before the next step.
+
+5. Upload:
+
+   - `twine upload --repository-url https://test.pypi.org/legacy/ dist/*` (test)
+   - `twine upload dist/*` (real)
+
+6. Download and test:
+
+   - `pip install -i https://test.pypi.org/simple/ ubscrape==0.5` (test)
+   - `pip install ubscrape` (real)
+
+7. `ubscrape --help`

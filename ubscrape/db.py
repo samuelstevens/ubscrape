@@ -51,6 +51,9 @@ def dump_database(arg):
     if isinstance(arg, str):
         writer = JsonWriter(out=arg)
 
+    print(f'Dumping to:')
+    print(f'\t{writer.path}')
+
     prev_word = ''
     definition_set = set()
 

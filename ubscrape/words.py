@@ -9,7 +9,10 @@ import requests
 from bs4 import BeautifulSoup
 
 
-from constants import BASE_URL
+from .constants import BASE_URL
+from .db import initialize_db
+
+CON = initialize_db()
 
 
 def write_words_for_letter(prefix: str, con):
@@ -33,7 +36,6 @@ def write_words_for_letter(prefix: str, con):
     req = requests.get(url)
 
     while req.url != 'https://www.urbandictionary.com/':
-
         soup = BeautifulSoup(req.text, features="html.parser")
         a_tags = soup.find_all('a', href=re.compile(r'/define.php'))
 
@@ -42,8 +44,8 @@ def write_words_for_letter(prefix: str, con):
 
         links = [l['href'] for l in a_tags]
 
-        encoded_words = [pattern.search(l).group(
-            1) for l in links if pattern.search(l)]
+        encoded_words = [pattern.search(l).group(1)
+                         for l in links if pattern.search(l)]
 
         words = [unquote(w) for w in encoded_words]
 
@@ -55,6 +57,8 @@ def write_words_for_letter(prefix: str, con):
                 formatted_words)
             con.commit()
         except IntegrityError:
+            # IntegrityError normally occurs when we try to
+            # insert words that are already in the database.
             pass
 
         print(
@@ -65,6 +69,6 @@ def write_words_for_letter(prefix: str, con):
         req = requests.get(url)
 
 
-def write_all_words(con):
-    for l in ascii_uppercase:
-        write_words_for_letter(l, con)
+def write_all_words():
+    for letter in ascii_uppercase:
+        write_words_for_letter(letter, CON)

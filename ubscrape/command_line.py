@@ -1,22 +1,22 @@
-from definitions import define_all_words, write_definition
-from words import write_all_words
-from db import initialize_db, clear_database, dump_database
 import argparse
+
+from .definitions import define_all_words, write_definition
+from .words import write_all_words
+from .db import clear_database, dump_database
 
 
 def scrape():
-    con = initialize_db()
-    write_all_words(con)
+    write_all_words()
     define_all_words()
-    con.close()
 
 
-def cli():
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-s",
                         "--scrape",
                         help="Continues scraping Urban Dictionary using the SQLite database as its starting point.",
                         action="store_true")
+
     parser.add_argument('-d',
                         '--dump',
                         action='store_true',
@@ -29,13 +29,16 @@ def cli():
 
     parser.add_argument("--define",
                         help="Look up a particular word and define it.")
+
     parser.add_argument("--define-all",
                         help="Define all words currently stored in SQLite that are not defined.",
                         action="store_true")
+
     parser.add_argument("-c",
                         "--clear",
                         help="Clears the existing SQLite database.",
                         action="store_true")
+
     parser.add_argument("-f",
                         "--force",
                         help="Forces the SQLite database to be cleared.",
@@ -48,7 +51,7 @@ def cli():
     elif args.dump:
         dump_database(args.dump)
     elif args.define:
-        definitions = write_definition(args.define)
+        definitions = write_definition((args.define,))
         print(definitions)
     elif args.define_all:
         define_all_words()
@@ -64,4 +67,4 @@ def cli():
 
 
 if __name__ == "__main__":
-    cli()
+    main()

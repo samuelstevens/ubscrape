@@ -1,14 +1,15 @@
 import json
 from functools import reduce
 import os
+from typing import List, Dict, Set
 
 
 class JsonWriter:
     def __init__(self, limit=50, out='results'):
-        self.pool = {}
-        self.limit = limit
-        self.first_word = ''
-        self.last_word = ''
+        self.pool: Dict[str, List[str]] = {}
+        self.limit: int = limit
+        self.first_word: str = ''
+        self.last_word: str = ''
         if out[0] != '/':  # is not a root path
             self.path = os.path.join(os.getcwd(), out)
         else:
@@ -16,9 +17,8 @@ class JsonWriter:
         if not os.path.exists(self.path):
             os.makedirs(self.path)
 
-    def write_word(self, word, definitions):
+    def write_word(self, word: str, definitions: Set[str]):
         if word and definitions:
-
             if self.first_word and word[0].lower() != self.first_word[0].lower():
                 self.dump_pool()
 
@@ -36,7 +36,6 @@ class JsonWriter:
 
     def dump_pool(self):
         file_name = f'{self.first_word}-{self.last_word}.json'
-        print(file_name)
 
         first_letter = file_name[0].lower()
 
@@ -47,16 +46,15 @@ class JsonWriter:
 
         file = os.path.join(folder, file_name)
 
-        with open(file, 'w') as f:
-            # todo: add os.path.join and actually write to disk, as well as a letter folder structure
-            json.dump(self.pool, f, sort_keys=True, indent=4)
+        with open(file, 'w') as fp:
+            json.dump(self.pool, fp, sort_keys=True, indent=4)
         self.pool = {}
 
-    def size(self):
-        def r(total_len, word):
-            defs = self.pool[word]
+    def size(self) -> int:
+        def reduce_f(total_len: int, word: str):
+            defs: List[str] = self.pool[word]
 
             return total_len + len(word) + reduce(lambda total, definition: total +
                                                   len(definition), defs, 4 * len(defs))
 
-        return 2 * reduce(r, self.pool, 2)
+        return 2 * reduce(reduce_f, self.pool, 2)

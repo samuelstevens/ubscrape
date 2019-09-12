@@ -1,5 +1,5 @@
 import sqlite3
-from dump import JsonWriter
+from .jsonwriter import JsonWriter
 
 
 def get_connection(db_file_name):
@@ -46,13 +46,15 @@ def dump_database(arg):
 
     writer = JsonWriter()
 
-    if type(arg) == str:
+    if isinstance(arg, str):
         writer = JsonWriter(out=arg)
 
     prev_word = ''
     definition_set = set()
 
-    for (word, definition) in con.execute('''SELECT word.word, definition.definition FROM definition INNER JOIN word ON definition.word_id=word.word ORDER BY word.word ASC;''').fetchall():
+    query = 'SELECT word.word, definition.definition FROM definition INNER JOIN word ON definition.word_id=word.word ORDER BY word.word ASC;'
+
+    for (word, definition) in con.execute(query).fetchall():
         if word == prev_word:
             # add to the same set
             definition_set.add(definition)

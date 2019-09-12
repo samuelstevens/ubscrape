@@ -10,6 +10,32 @@ $ python ubscrape-runner.py # [args]
 
 ## Installation
 
+```bash
+pip install ubscrape
+```
+
+## Running ubscrape
+
+```bash
+ubscrape --help # shows options
+
+ubscrape --scrape # begins scraping all of urban dictionary, starting by adding words to database
+
+ubscrape --define hello # defines hello and prints it, verifies your network connection
+
+ubscrape --define-all # begind defining all words that are stored locally
+
+ubscrape --dump # dump all existing definitions to .json files
+
+ubscrape --dump --out OUT # specify an output directory for --dump
+
+ubscrape --report # shows the progress in defining all the locally stored words
+
+ubscrape --clear --force # deletes the locally stored words and definitions
+
+
+```
+
 ## How ubscrape Works
 
 1. ubscrape goes through the page indices looking for every word (https://www.urbandictionary.com/browse.php?character=A, https://www.urbandictionary.com/browse.php?character=A&page=2, etc). ubscrape adds these words to a SQLite database in a `words` table.
@@ -61,6 +87,16 @@ real 0m2.893s
 I could run it on my laptop for 6 hours a day, or I could run it on the school computers and get it done in two days (checking twice a day on progress).
 
 ## Building
+
+0. Testing before building:
+
+```bash
+python -m ubscrape --version
+python -m ubscrape --scrape # for a bit
+python -m ubscrape --define hello
+python -m ubscrape --define-all # for a bit
+python -m ubscrape --dump
+```
 
 1. Delete `build/`, `dist/`, `ubscrape.egg-info/`.
 

@@ -1,10 +1,9 @@
 import argparse
-import sys
 
 from .definitions import define_all_words, write_definition
 from .words import write_all_words
 from .db import clear_database, dump_database, get_connection
-from .constants import version
+from .constants import VERSION
 
 
 def report_progress():
@@ -77,7 +76,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        print(f'Version {version}')
+        print(f'Version {VERSION}')
 
     if args.report:
         report_progress()

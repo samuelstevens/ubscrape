@@ -7,12 +7,12 @@ from string import ascii_lowercase
 
 def get_letter(word: str) -> str:
     if not word:
-        return None
+        raise ValueError('word must have at least one character.')
 
     if word[0].lower() in ascii_lowercase:
         return word[0].lower()
-    else:
-        return '*'
+
+    return '*'
 
 
 class JsonWriter:

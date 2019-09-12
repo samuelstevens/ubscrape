@@ -1,6 +1,7 @@
 import sqlite3
+
 from .jsonwriter import JsonWriter
-from typing import List, Tuple
+
 DB_FILE_NAME = 'urban-dict.db'
 
 

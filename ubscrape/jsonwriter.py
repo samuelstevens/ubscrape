@@ -25,8 +25,6 @@ class JsonWriter:
             self.path = os.path.join(os.getcwd(), out)
         else:
             self.path = out
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
 
     def write_word(self, word: str, definitions: Set[str]):
         if word and definitions:

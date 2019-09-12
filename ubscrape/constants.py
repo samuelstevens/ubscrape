@@ -1,3 +1,3 @@
 BASE_URL = 'https://www.urbandictionary.com'
 
-VERSION = '0.3'
+VERSION = '0.1.4'

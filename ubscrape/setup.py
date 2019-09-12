@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='ubscrape',
-    version='0.3',
+    version='0.1.4',
     description='Scrapes Urban Dictionary and stores it locally.',
     url='http://github.com/samuelstevens/ubscrape',
     author='Samuel Stevens',

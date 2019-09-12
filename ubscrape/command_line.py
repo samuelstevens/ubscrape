@@ -10,18 +10,19 @@ from .constants import version
 def report_progress():
     con = get_connection()
 
-    count = con.execute(
+    count: int = con.execute(
         'SELECT COUNT(word) FROM word WHERE complete = 1').fetchone()[0]
-    total = con.execute('SELECT COUNT(word) FROM word').fetchone()[0]
+    total: int = con.execute('SELECT COUNT(word) FROM word').fetchone()[0]
 
     seconds_remaining = (total - count) / 10
     hours_remaining = seconds_remaining / 60 / 60
     days_remaining = hours_remaining / 24
 
     print(f'{count} defined out of {total} total words.')
-    print(f'{(count / total * 100):.2f}% complete.')
-    print(
-        f'At roughly 10 words/second, it will take {hours_remaining:.1f} hours, or {days_remaining:.1f} days.')
+    if total:
+        print(f'{(count / total * 100):.2f}% complete.')
+        print(
+            f'At roughly 10 words/second, it will take {hours_remaining:.1f} hours, or {days_remaining:.1f} days.')
 
 
 def scrape():

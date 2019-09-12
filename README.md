@@ -31,6 +31,8 @@ If ubscrape crashes or fails, it will restart and try to redo as little work as 
 - Add support for dumping at the same time as scraping, making it less linear.
 - Add a version number to the CLI
 - Add a `--report` option to show the current progress (number of words, defined, total number of words, estimate at 10 words/second)
+- Check that unicode characters are being properly encoded.
+- Check that unsafe URL characters are properly encoded and requested.
 
 ## Parallelizing Work
 

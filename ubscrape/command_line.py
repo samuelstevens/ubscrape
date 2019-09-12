@@ -97,7 +97,7 @@ def main():
         else:
             print(
                 "Use --clear [-c] with --force [-f] to COMPLETELY DELETE the SQLite database.")
-    elif not args.report:
+    elif not args.report and not args.version:
         print('No arguments detected. Continuing to scrape.')
         scrape()
 

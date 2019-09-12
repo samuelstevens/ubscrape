@@ -4,3 +4,4 @@ venv
 *.db
 *-journal
 __pycache__
+results

@@ -28,10 +28,13 @@ def define_word(word) -> List[str]:
 
 
 def write_definition(word):
-    word = word[0]
+    # complete = CON.execute(
+    #     'SELECT complete FROM word WHERE word = ?', (word,)).fetchone()[0]
+
+    # if complete:
+    #     return CON.execute('SELECT definition FROM definition WHERE word_id = ?', (word,)).fetchall()
 
     defs = define_word(word)
-
     formatted_defs = [(d, word) for d in defs]
 
     CON.executemany(
@@ -39,11 +42,13 @@ def write_definition(word):
     CON.execute('UPDATE word SET complete = 1 WHERE word = ?', (word,))
     CON.commit()
 
+    return defs
+
 
 def define_all_words():
     pool = mp.Pool(mp.cpu_count())
 
     words = CON.execute(
-        'SELECT * FROM word WHERE complete = 0').fetchall()
+        'SELECT word FROM word WHERE complete = 0').fetchall()
 
-    pool.map(write_definition, words, chunksize=20)
+    pool.map(write_definition, words, chunksize=200)

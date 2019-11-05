@@ -63,6 +63,10 @@ def main():
                         help="Clears the existing SQLite database.",
                         action="store_true")
 
+    parser.add_argument("--tsv",
+                        action='store_true',
+                        help="Dumps the SQLite database to .tsv files.")
+
     parser.add_argument("-r",
                         "--report",
                         help="Shows the progress of defining words.",
@@ -85,6 +89,8 @@ def main():
         scrape()
     elif args.dump:
         dump_database(args.dump)
+    elif args.tsv:
+        dump_database(args.dump, csv=True)
     elif args.define:
         definitions = write_definition((args.define,))
         if definitions:

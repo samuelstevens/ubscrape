@@ -1,14 +1,13 @@
 import sqlite3
 
 from .jsonwriter import JsonWriter
+from .csvwriter import CsvWriter
 
 DB_FILE_NAME = 'urban-dict.db'
 
 
 def get_connection():
-    con = sqlite3.connect(DB_FILE_NAME)
-
-    return con
+    return sqlite3.connect(DB_FILE_NAME)
 
 
 def initialize_db():
@@ -44,16 +43,21 @@ def clear_database():
     con.close()
 
 
-def dump_database(arg):
+def dump_database(arg, csv=False):
     con = get_connection()
 
-    writer = JsonWriter()
+    if csv:
+        writer = CsvWriter()
 
-    if isinstance(arg, str):
-        writer = JsonWriter(out=arg)
+        if isinstance(arg, str):
+            writer = CsvWriter(out=arg)
+    else:
+        writer = JsonWriter()
 
-    print(f'Dumping to:')
-    print(f'\t{writer.path}')
+        if isinstance(arg, str):
+            writer = JsonWriter(out=arg)
+
+    print(f'Dumping to: {writer.path}')
 
     prev_word = ''
     definition_set = set()

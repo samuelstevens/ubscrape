@@ -55,7 +55,6 @@ If ubscrape crashes or fails, it will restart and try to redo as little work as 
 ## To Do
 
 - Add support for dumping at the same time as scraping, making it less linear.
-- Add a version number to the CLI
 
 ## Limitations
 
